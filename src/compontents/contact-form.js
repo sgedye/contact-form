@@ -4,10 +4,8 @@ import styles from './contact.module.scss';
 import sentMailSound from './sentMailSound.mp3';
 
 const ContactForm = () => {
-  const [errors, setErrors] = useState({
-    name: '', email: '', message: ''
-  });
   const audioRef = useRef(null);
+  const [errors, setErrors] = useState({ name: '', email: '', message: '' });
 
   const handleChange = e => {
     e.preventDefault();
@@ -62,7 +60,6 @@ const ContactForm = () => {
     document.getElementById('submit-text').innerText = '';
     document.getElementById('submit-btn').disabled = false;
     document.getElementById('submit-btn').style.backgroundColor = 'blue'; 
-
   }
 
   const validateForm = () => {
@@ -80,12 +77,12 @@ const ContactForm = () => {
     submitBtn.disabled = true;
     const isValid = validateForm();
     if (isValid) {
-      console.log('Happy Dayzzz')
       //
-      //TODO:
-      // Actually send the form...!!!
       //
-
+      // TODO: Actually send the form. At the moment it doesn't send to anyone.
+      // mail($recipient, $subject, $mailBody, "From: $sender <$senderEmail>");
+      //
+      //
       submitBtn.style.backgroundColor = 'green';
       submitText.innerText = 'Success, your form has been sent.';
       submitText.style.color = 'green';
@@ -222,7 +219,7 @@ const ContactForm = () => {
         <div className={styles.formFooter} />
       </div>
     </>
-  )
+  );
 };
 
 export default ContactForm;

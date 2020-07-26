@@ -6,7 +6,7 @@
 .formContainer {  
   width: 100%;
   max-width: 475px;
-  margin: 0;
+  margin: 0 auto;
   background-color: white;
   border: 1px solid #333;
   border-radius: 1rem;
@@ -58,7 +58,6 @@
   background-color: white;
   outline-color: #777;
   outline-style: auto;
-  box-shadow: inset 0 0 3px 0px black;
   &:focus {
     background-color: rgba(0, 0, 255, 0.2);
     outline-color: blue;
@@ -102,7 +101,7 @@
   text-transform: uppercase;
   font-weight: 600;
   box-shadow: 1px 2px 2px black;
-  &:active {
+  &:active, &:disabled {
     margin: 2px 0 0 1px;
     box-shadow: none;
   }
@@ -149,6 +148,9 @@
   }
   .submitText {
     font-size: 1.2em;
+  }
+  .formBody .list .listItem {
+    margin: 0.3rem 0;
   }
 }
 
