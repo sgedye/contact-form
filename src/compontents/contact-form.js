@@ -1,16 +1,13 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import classnames from 'classnames';
 import styles from './contact.module.scss';
+import sentMailSound from './sentMailSound.mp3';
 
 const ContactForm = () => {
-
-  // const [name, setName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({
     name: '', email: '', message: ''
   });
+  const audioRef = useRef(null);
 
   const handleChange = e => {
     e.preventDefault();
@@ -20,9 +17,9 @@ const ContactForm = () => {
       case "name":
         const nameRegex = RegExp(/^[a-zA-Z\s-]*$/)
         if (value.length < 3) {
-          errorsCopy[name] = `Your name must be at least 3 characters long.`;
+          errorsCopy[name] = `${value.length} characters is less than the minimum length of 3.`;
         } else if (value.length > 25) {
-          errorsCopy[name] = `Maximum name is 25 characters, you've entered ${value.length} characters.`;
+          errorsCopy[name] = `${value.length } characters is more than the maximum length of 25.`;
         } else if (!nameRegex.test(value)) {
           errorsCopy[name] = `Only letters, whitespace and dashes (-) are accepted.`;
         } else {
@@ -36,8 +33,8 @@ const ContactForm = () => {
         );
         if (value.length < 6) {
           errorsCopy[name] = `Emails must be atleast 6 characters long.`;
-        } else if (value.length > 25) {
-          errorsCopy[name] = `${value.length} characters is more than the maximum length of 25.`;
+        } else if (value.length > 40) {
+          errorsCopy[name] = `${value.length} characters is more than the maximum length of 40.`;
         } else if(!illegalChars.test(value)) {
           errorsCopy[name] = `Invalid character entered.`;
         } else if (!acceptEmail.test(value)) {
@@ -62,8 +59,9 @@ const ContactForm = () => {
         break;
     }
     setErrors({...errors, [name]: errorsCopy[name]});
-    const submitBtn = document.getElementById('submit-btn');
-    submitBtn.style.backgroundColor = 'blue';
+    document.getElementById('submit-text').innerText = '';
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('submit-btn').style.backgroundColor = 'blue'; 
 
   }
 
@@ -77,12 +75,21 @@ const ContactForm = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const submitText = document.getElementById('submit-text');
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = true;
     const isValid = validateForm();
     if (isValid) {
       console.log('Happy Dayzzz')
-      // const mailSent = new Audio("./mailSentSound.mp3");
-      // mailSent.play();
-      new Audio("./mailSentSound.mp3").play()
+      //
+      //TODO:
+      // Actually send the form...!!!
+      //
+
+      submitBtn.style.backgroundColor = 'green';
+      submitText.innerText = 'Success, your form has been sent.';
+      submitText.style.color = 'green';
+      audioRef.current.play();
     } else {
       const errorsCopy = {...errors};
       for (const [key, value] of Object.entries(errors)) {
@@ -90,12 +97,11 @@ const ContactForm = () => {
           errorsCopy[key] = 'Please fill in this input.';
         }
       }
+      submitBtn.style.backgroundColor = 'grey';
+      submitText.innerText = 'Form not sent.';
+      submitText.style.color = 'red';
       setErrors({ ...errors, ...errorsCopy });
     }
-    const submitBtn = document.getElementById('submit-btn');
-    submitBtn.style.backgroundColor = (isValid) ? 'blue' : 'grey';
-    console.log(isValid)
-
   }
 
   return (
@@ -110,12 +116,10 @@ const ContactForm = () => {
         </div>
         <div className={styles.postalColours}></div>
         <div className={styles.formBody}>
-          <div id="form-error"></div>
-
           <form
             id="contact-form"
             action="/"
-            method="GET"
+            method="POST"
             noValidate
             onSubmit={handleSubmit}
           >
@@ -206,12 +210,16 @@ const ContactForm = () => {
                   type="submit"
                   value="Submit"
                 />
-                {/* <small>or press <strong>enter</strong></small> */}
+                <div className={styles.submitTextWrapper}>
+                  <strong id="submit-text"className={styles.submitText} />
+                </div>
               </li>
             </ul>
+            <audio ref={audioRef} src={sentMailSound} />
           </form>
         </div>
         <div className={styles.postalColours}></div>
+        <div className={styles.formFooter} />
       </div>
     </>
   )
